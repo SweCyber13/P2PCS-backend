@@ -6,7 +6,7 @@
  * Time: 23:10
  */
 
-class event
+class Event
 {
     // database connection and table name
     private $conn;
@@ -81,7 +81,7 @@ class event
         $stmt = $this->conn->prepare($query);
 
         //bind params
-        $stmt->bind_param("isss",$this->username,$this->nome,$this->cognome,$this->mail);
+        $stmt->bind_param("isss",$this->id,$this->nome_azienda,$this->titolo_offerta,$this->descrizione+);
 
         // execute query and save success or error
         $result=$stmt->execute();
