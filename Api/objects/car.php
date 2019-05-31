@@ -455,12 +455,63 @@ class Car
 
     function checkavability($day,$start_time,$end_time) {
         //controlla se l'auto è disponibile nel giorno specificato nell'intervallo specificato
+        $res=$this->getavaiability($day);
+        $num = $res->num_rows;
+        if($num==1) {
+            $row = mysqli_fetch_assoc($res);
+            $currentstring=new Timestring($row["Stringa_disponibilita"]);
+            $updatestring = new Timestring();
+            $updatestring->make($start_time, $end_time);
+            //controllo se le ore richieste con updatestring siano disponibili
+            $disponibile=$currentstring->xor_string($updatestring);
+
+            //$disponibile è true se e solo se l'auto è disponibile nella fascia oraria indicata
+            //lo ritorno
+
+            return $disponibile;
+
+
+
+        }
+        //l'auto non è mai disponibile nel giorno indicato
+        else return false;
     }
 
     function decreaseavaiability($day,$start_time,$end_time){
         //se è presente un record in quel giorno controlla che l'auto sia disponibile nell'intervallo indicato
         //e toglie la disponibilità in tale intervallo
-        //TODO
+        //AL MOMENTO FUNZIONE ANCHE DA PRENOTAZIONE
+
+        $disponibile=$this->checkavability($day,$start_time,$end_time);
+        if($disponibile){
+            $res=$this->getavaiability($day);
+            //di sicuro l'auto è disponibile e $res contiene una riga
+            $row = mysqli_fetch_assoc($res);
+            $currentstring=new Timestring($row["Stringa_disponibilita"]);
+            $updatestring = new Timestring();
+            $updatestring->make($start_time, $end_time);
+            //aggiorno la stringa togliendo la disponibilità prenotata
+            $currentstring->xor_string($updatestring,true);
+
+            //aggiorno la stringa di disponibilita presente nel database
+
+            //prendo la stringa da aggiornare
+            $updatevalue=$currentstring->string;
+
+            $query="UPDATE $this->table_avaiability SET Stringa_disponibilita=? WHERE Macchina=? AND Giorno=?";
+            // prepare query statement
+            $stmt = $this->conn->prepare($query);
+
+            //bind params
+
+            $stmt->bind_param("sss",$updatevalue,$this->targa,$day);
+
+            // execute query and return true if success
+            return $stmt->execute();
+
+        }
+        //l'auto non è prentoabile nell'orario indicato
+        else return false;
     }
 
     function getcloser($latitude, $longitude, $limit=100) {
