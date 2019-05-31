@@ -39,3 +39,5 @@ else{
         array("message" => "User not found")
     );
 }
+
+?>
