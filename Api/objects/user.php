@@ -317,4 +317,57 @@ class User
         //TODO
     }
 
+    function addpoints($type,$value) {
+        //AGGIUNGE PUNTI BUONI O RANK DELLA QUANTITA $VALUE
+        //$type= rank (0) o buoni (1)
+        if($type==0){
+            //rank
+            $res=$this->getcurrent();
+            $row = mysqli_fetch_assoc($res);
+            $currentpoints=$row["Punti_rank"];
+            $this->punti_rank=$currentpoints+$value;
+        }
+        if($type==1){
+            //buoni
+            $res=$this->getcurrent();
+            $row = mysqli_fetch_assoc($res);
+            $currentpoints=$row["Punti_buoni"];
+            $this->punti_buoni=$currentpoints+$value;
+
+        }
+
+        //faccio l'update
+        return $this->update();
+    }
+
+    function subtractpoints($type,$value){
+        //RIMUOVE PUNTI BUONI O RANK DELLA QUANTITA $VALUE
+        //$type= rank (0) o buoni (1)
+        if($type==0){
+            //rank
+            $res=$this->getcurrent();
+            $row = mysqli_fetch_assoc($res);
+            $currentpoints=$row["Punti_rank"];
+            //il valore di punti non può andare sotto zero
+            if($currentpoints-$value < 0) return false;
+            $this->punti_rank=$currentpoints-$value;
+        }
+        if($type==1){
+            //buoni
+            $res=$this->getcurrent();
+            $row = mysqli_fetch_assoc($res);
+            $currentpoints=$row["Punti_buoni"];
+            //il valore di punti non può andare sotto zero
+            if($currentpoints-$value < 0) return false;
+            $this->punti_buoni=$currentpoints-$value;
+
+        }
+
+        //faccio l'update
+        return $this->update();
+
+    }
+
+
+
 }
