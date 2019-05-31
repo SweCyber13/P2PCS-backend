@@ -65,7 +65,7 @@ class Timestring
 
     }
 
-    function xor_string(Timestring $string, $update) {
+    function xor_string(Timestring $string, $update=false) {
         //l'utente passa una stringa, sono da controllare che tutti gli 1 presenti sulla stringa passata ci siano anche su quella attuale
         //se $update è vero cambia il valore del campo stringa se e solo se i caratteri che valgono 1 della
         // stringa passata valgono 1 anche su campo $string del chiamante

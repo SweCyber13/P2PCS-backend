@@ -10,12 +10,11 @@ class event
 {
     // database connection and table name
     private $conn;
-    private $table_name = "COUPONS";
+    private $table_name = "EVENTI";
 
     public $id; //PK
-    public $soglia_punti;
-    public $titolo;
-    public $azienda;
+    public $nome_azienda;
+    public $titolo_offerta;
     public $descrizione;
 
     // constructor with $db as database connection

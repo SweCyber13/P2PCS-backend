@@ -340,7 +340,7 @@ class Car
         //ritorna la tabella contenente le recensioni per questa auto
 
         //JOIN PRENOTAZIONI E RECENSIONI DOVE TARGA DI PRENOTAZIONI E' QUELLA DELL'AUTO
-        $query = "SELECT Voto, Testo FROM $this->table_travels JOIN $this->table_reviews 
+        $query = "SELECT Recensore, Voto, Testo FROM $this->table_travels JOIN $this->table_reviews 
                   ON Id_viaggio = Id_prenotazioni WHERE $this->table_travels.Targa = ? ";
 
         // prepare query statement
@@ -451,6 +451,10 @@ class Car
 
         }
 
+    }
+
+    function checkavability($day,$start_time,$end_time) {
+        //controlla se l'auto è disponibile nel giorno specificato nell'intervallo specificato
     }
 
     function decreaseavaiability($day,$start_time,$end_time){

@@ -291,7 +291,7 @@ class User
         //ritorna la tabella contenente le recensioni per questo utente sia come prestatore auto che come autista
 
         //JOIN PRENOTAZIONI E RECENSIONI DOVE RECENSITO E' LO USERNAME
-        $query = "SELECT Voto, Testo FROM $this->table_travels JOIN $this->table_reviews 
+        $query = "SELECT Recensore, Voto, Testo FROM $this->table_travels JOIN $this->table_reviews 
                   ON Id_viaggio = Id_prenotazioni WHERE $this->table_reviews.Recensito = ? ";
 
         // prepare query statement

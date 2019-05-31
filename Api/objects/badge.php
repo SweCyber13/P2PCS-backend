@@ -20,6 +20,10 @@ class badge
         $this->conn = $db;
     }
 
+    function readall($user){
+        //fa vedere tutte le medaglie ottenute dall'utente
+    }
+
     function assign($user){
         //assegna un badge all'utente con username indicato
     }
