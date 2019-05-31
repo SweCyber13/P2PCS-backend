@@ -22,22 +22,75 @@ class badge
 
     function readall($user){
         //fa vedere tutte le medaglie ottenute dall'utente
+        $query = "SELECT Medaglia FROM $this->table_assegnati WHERE Utente=?";
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+
+        //bind params
+
+        $stmt->bind_param("s",$user);
+
+        // execute query
+        $stmt->execute();
+
+        //get select results
+        $result=$stmt->get_result();
+
+        return $result;
     }
 
     function assign($user){
         //assegna un badge all'utente con username indicato
+        // select all query
+        $query = "INSERT INTO $this->table_assegnati(Utente,Medaglia)  VALUES(?,?)";
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+
+        //bind params
+
+        $stmt->bind_param("ss",$user,$this->nome);
+
+        // execute query and save success or error
+        $result=$stmt->execute();
+
+        return $result;
     }
 
     function delete(){
+        // select all query
+        $query = "DELETE FROM $this->table_name WHERE Nome=?";
 
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+
+        //bind params
+
+        $stmt->bind_param("s",$this->nome);
+
+        // execute query
+
+        $result=$stmt->execute();
+
+        return $result;
     }
 
     function create(){
+        // select all query
+        $query = "INSERT INTO $this->table_name(Nome)  VALUES(?)";
 
-    }
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
 
-    function update(){
+        //bind params
 
+        $stmt->bind_param("s",$this->nome);
+
+        // execute query and save success or error
+        $result=$stmt->execute();
+
+        return $result;
     }
 
 

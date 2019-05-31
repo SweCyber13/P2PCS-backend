@@ -16,6 +16,7 @@ class booking
     private $conn;
     private $table_name = "PRENOTAZIONI";
     private $table_cars="MACCHINE_UTENTI";
+    private $table_review="RECENSIONI";
 
     // object properties
     public $id; //PK
@@ -268,6 +269,18 @@ class booking
         else return false;
 
 
+    }
+
+    function review($voto,$testo){
+        //user deve essere o il proprietario o il richiedente
+        //la review può essere fatta solo a viaggio terminato
+        if($this->richiedente){
+            //TODO
+        }
+        else if($this->proprietario){
+            //TODO
+        }
+        else return false;
     }
 
 
