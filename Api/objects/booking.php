@@ -98,9 +98,9 @@ class booking
     }
 
     function readbookings(){
-        //ritorna tutte le prenotazioni ricevute dal proprietario NON ANCORA TERMINATE
+        //ritorna tutte le prenotazioni ricevute dal proprietario NON ANCORA ACCETTATE
         // select all query
-        $query = "SELECT * FROM $this->table_name WHERE Richiedente=? AND Stato!='T'";
+        $query = "SELECT * FROM $this->table_name WHERE Richiedente=? AND Stato='P'";
 
         // prepare query statement
         $stmt = $this->conn->prepare($query);
@@ -118,9 +118,9 @@ class booking
     }
 
     function readtravels(){
-        //ritorna tutte le prenotazioni ricevute dal proprietario con stato T (termitate)
+        //ritorna tutte le prenotazioni ricevute dal proprietario con stato A C o T
         // select all query
-        $query = "SELECT * FROM $this->table_name WHERE Richiedente=? AND Stato='T'";
+        $query = "SELECT * FROM $this->table_name WHERE Richiedente=? AND Stato!='P'";
 
         // prepare query statement
         $stmt = $this->conn->prepare($query);

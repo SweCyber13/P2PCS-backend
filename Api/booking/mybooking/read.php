@@ -1,4 +1,10 @@
 <?php
+/**
+ * Created by IntelliJ IDEA.
+ * User: squer
+ * Date: 31/05/2019
+ * Time: 17:32
+ */
 
 // required headers
 header("Access-Control-Allow-Origin: *");
@@ -7,27 +13,27 @@ header("Content-Type: application/json; charset=UTF-8");
 // database connection will be here
 
 // include database and object files
-include_once '../config/database.php';
-include_once '../objects/event.php';
+include_once '../../config/database.php';
+include_once '../../objects/booking.php';
 
 // instantiate database and product object
 $database = new Database();
 $db = $database->getConnection();
 
 // initialize object
-$event = new Event($db);
+$booking= new booking($db);
 
-$event->id= $_GET['ID'];
+$booking->id= $_GET['ID'];
 
-$res=$event->read();
+$res=$booking->read();
 
 $num = $res->num_rows;
 
 if($num>0){
 
     // products array
-    $events_arr=array();
-    $events_arr["evento"]=array();
+    $arr=array();
+    $arr["prenotazione"]=array();
 
     // retrieve our table contents
     // fetch() is faster than fetchAll()
@@ -36,14 +42,14 @@ if($num>0){
         // extract row
         extract($row);
 
-        array_push($events_arr["evento"], $row);
+        array_push($arr["prenotazione"], $row);
     }
 
     // set response code - 200 OK
     http_response_code(200);
 
     // show products data in json format
-    echo json_encode($events_arr,JSON_PRETTY_PRINT);
+    echo json_encode($arr,JSON_PRETTY_PRINT);
 }
 else{
 
@@ -52,8 +58,6 @@ else{
 
     // tell the user no products found
     echo json_encode(
-        array("message" => "Event not found")
+        array("message" => "Booking not found")
     );
 }
-
-?>

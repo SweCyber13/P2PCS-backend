@@ -1,4 +1,10 @@
 <?php
+/**
+ * Created by IntelliJ IDEA.
+ * User: squer
+ * Date: 31/05/2019
+ * Time: 17:33
+ */
 
 // required headers
 header("Access-Control-Allow-Origin: *");
@@ -7,22 +13,20 @@ header("Content-Type: application/json; charset=UTF-8");
 // database connection will be here
 
 // include database and object files
-include_once '../config/database.php';
-include_once '../objects/event.php';
+include_once '../../config/database.php';
+include_once '../../objects/booking.php';
 
 // instantiate database and product object
 $database = new Database();
 $db = $database->getConnection();
 
 // initialize object
-$event = new Event($db);
+$booking= new booking($db);
 
-$event->id= $_GET['ID'];
-$event->nome_azienda= $_GET['NOME_AZIENDA'];
-$event->titolo_offerta= $_GET['TITOLO_OFFERTA'];
-$event->descrizione= $_GET['DESCRIZIONE'];
+$booking->id= $_GET['ID'];
 
-$res=$event->create();
+
+$res=$booking->delete();
 
 if($res){
     // set response code - 200 OK
@@ -39,8 +43,6 @@ else{
 
     // tell the user no products found
     echo json_encode(
-        array("message" => "Error")
+        array("message" => "Error") //prenotazione non esistente
     );
 }
-
-?>

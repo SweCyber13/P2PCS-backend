@@ -81,7 +81,7 @@ class Event
         $stmt = $this->conn->prepare($query);
 
         //bind params
-        $stmt->bind_param("isss",$this->id,$this->nome_azienda,$this->titolo_offerta,$this->descrizione+);
+        $stmt->bind_param("isss",$this->id,$this->nome_azienda,$this->titolo_offerta,$this->descrizione);
 
         // execute query and save success or error
         $result=$stmt->execute();
@@ -134,7 +134,7 @@ class Event
             }
         }
 
-        //return 0 if there was an error
+        //return false if there was an error
         if($errors>0) return false;
         else
             return true;
