@@ -272,13 +272,49 @@ class booking
     }
 
     function review($voto,$testo){
-        //user deve essere o il proprietario o il richiedente
+        //deve essere presente proprietario o richiedente sul this
         //la review può essere fatta solo a viaggio terminato
         if($this->richiedente){
-            //TODO
+            //ricavo il dato del recensito
+            $res=$this->read();
+            $row = mysqli_fetch_assoc($res);
+            $recensito=$row['Proprietario'];
+
+            // inserisco la review
+            $query = "INSERT INTO $this->table_review(Recensore,Recensito,Voto,Testo)  VALUES(?,?,?,?)";
+
+            // prepare query statement
+            $stmt = $this->conn->prepare($query);
+
+            //bind params
+
+            $stmt->bind_param("ssis",$this->richiedente,$recensito,$voto,$testo);
+
+            // execute query and save success or error
+            $result=$stmt->execute();
+
+            return $result;
         }
         else if($this->proprietario){
-            //TODO
+            //ricavo il dato del recensito
+            $res=$this->read();
+            $row = mysqli_fetch_assoc($res);
+            $recensito=$row['Richiedente'];
+
+            // inserisco la review
+            $query = "INSERT INTO $this->table_review(Recensore,Recensito,Voto,Testo)  VALUES(?,?,?,?)";
+
+            // prepare query statement
+            $stmt = $this->conn->prepare($query);
+
+            //bind params
+
+            $stmt->bind_param("ssis",$this->richiedente,$recensito,$voto,$testo);
+
+            // execute query and save success or error
+            $result=$stmt->execute();
+
+            return $result;
         }
         else return false;
     }

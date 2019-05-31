@@ -3,7 +3,7 @@
  * Created by IntelliJ IDEA.
  * User: squer
  * Date: 31/05/2019
- * Time: 17:34
+ * Time: 22:00
  */
 
 // required headers
@@ -24,9 +24,12 @@ $db = $database->getConnection();
 $booking= new booking($db);
 
 $booking->id= $_GET['ID'];
+$booking->proprietario= $_GET['USERNAME']; //l'utente che vuole fare la review è il proprietario dell'auto
+$testo= $_GET['TESTO'];
+$voto= $_GET['VOTO'];
 
 
-$res=$booking->updatestatus();
+$res=$booking->review($voto,$testo);
 
 if($res){
     // set response code - 200 OK
