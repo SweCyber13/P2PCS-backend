@@ -65,7 +65,7 @@ class Event
         $stmt = $this->conn->prepare($query);
 
         //bind params
-        $stmt->bind_param("i",$this->username);
+        $stmt->bind_param("i",$this->id);
 
         // execute query
         $result=$stmt->execute();
@@ -91,7 +91,6 @@ class Event
 
     function update(){
         //check what params need to be updated
-        //$fields="";
         $errors=0;
         if($this->nome_azienda) {
             $query="UPDATE $this->table_name SET Nome_azienda=? WHERE Id_eventi=?";
