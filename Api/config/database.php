@@ -2,9 +2,9 @@
 class Database{
 
     // specify your own database credentials
-    private $host = "database-1.cxb0zlwq8zls.us-east-1.rds.amazonaws.com";
-    private $db_name = "P2PCS";
-    private $username = "admin";
+    private $host = "db4free.net";
+    private $db_name = "p2pcscyber13";
+    private $username = "cyber13";
     private $password = "adminadmin";
     public $conn;
 

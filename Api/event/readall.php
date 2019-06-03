@@ -44,7 +44,7 @@ if($num>0){
     http_response_code(200);
 
     // show products data in json format
-    echo json_encode($events_arr,JSON_PRETTY_PRINT);
+    echo json_encode($events_arr,JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 }
 else{
 

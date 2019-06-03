@@ -75,13 +75,13 @@ class Event
 
     function create(){
         // select all query
-        $query = "INSERT INTO $this->table_name(Id_eventi, Nome_azienda, Titolo_offerta, Descrizione)  VALUES(?, ?, ?, ?)";
+        $query = "INSERT INTO $this->table_name( Nome_azienda, Titolo_offerta, Descrizione)  VALUES( ?, ?, ?)";
 
         // prepare query statement
         $stmt = $this->conn->prepare($query);
 
         //bind params
-        $stmt->bind_param("isss",$this->id,$this->nome_azienda,$this->titolo_offerta,$this->descrizione);
+        $stmt->bind_param("sss",$this->nome_azienda,$this->titolo_offerta,$this->descrizione);
 
         // execute query and save success or error
         $result=$stmt->execute();

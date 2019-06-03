@@ -17,7 +17,6 @@ $db = $database->getConnection();
 // initialize object
 $event = new Event($db);
 
-$event->id= $_GET['ID'];
 $event->nome_azienda= $_GET['NOME_AZIENDA'];
 $event->titolo_offerta= $_GET['TITOLO_OFFERTA'];
 $event->descrizione= $_GET['DESCRIZIONE'];
