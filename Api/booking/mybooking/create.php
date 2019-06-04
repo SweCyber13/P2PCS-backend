@@ -10,11 +10,18 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
+//--------------DEBUG------------------
+error_reporting(E_ALL);
+ini_set("display_errors","On");
+//-------------------------------------
+
 // database connection will be here
 
 // include database and object files
 include_once '../../config/database.php';
 include_once '../../objects/booking.php';
+include_once '../../objects/car.php';
+include_once '../../utils/Timestring.php';
 
 // instantiate database and product object
 $database = new Database();

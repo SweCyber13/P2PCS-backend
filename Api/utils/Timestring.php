@@ -10,11 +10,13 @@ class Timestring
 {
     private $length=96;
     private $minute_block=15;
+    //la stringa di default sono tutti zeri
+    private $defaultstr="000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
 
     public $string;
     //1 is free 0 is occupie
 
-    public function __construct($string="") {
+    public function __construct($string="000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000") {
         $this->string=$string;
     }
 
@@ -69,15 +71,15 @@ class Timestring
         //l'utente passa una stringa, sono da controllare che tutti gli 1 presenti sulla stringa passata ci siano anche su quella attuale
         //se $update è vero cambia il valore del campo stringa se e solo se i caratteri che valgono 1 della
         // stringa passata valgono 1 anche su campo $string del chiamante
-        for ($i = 0; $i < strlen($string); $i++){
-            if($string[$i]=="1"&&$this->string[$i]=="0"){
+        for ($i = 0; $i < strlen($string->string); $i++){
+            if($string->string[$i]=="1"&&$this->string[$i]=="0"){
                 return false;
             }
         }
 
         if($update){
-            for ($i = 0; $i < strlen($string); $i++){
-                if($string[$i]=="1"){
+            for ($i = 0; $i < strlen($string->string); $i++){
+                if($string->string[$i]=="1"){
                     $this->string[$i]="0";
                 }
             }

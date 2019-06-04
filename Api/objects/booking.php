@@ -6,6 +6,7 @@
  * Time: 23:12
  */
 
+//include for method shows
 include_once '../objects/car.php'; //dipendenza: aggiornare la disponibilità al momento di una prenotazione accettata
 
 class booking
@@ -163,7 +164,7 @@ class booking
         //controllo che l'auto sia disponibile il giorno e l'orario indicato
         $car = new Car($this->conn);
         $car->targa=$this->targa;
-        $disponibile=$car->checkavaiability($this->data_inizio,$this->ora_inizio,$this->ora_fine);
+        $disponibile=$car->checkavability($this->data_inizio,$this->ora_inizio,$this->ora_fine);
         //se non è disponibile faccio fallire l'operazione
         if(!$disponibile) return false;
 
@@ -181,11 +182,12 @@ class booking
         //bind params s string i int d double
 
         $stmt->bind_param("ssssisidssdddd",$this->proprietario,$this->richiedente,$this->targa,$this->data_inizio,
-            $this->ora_inizio, $this->ora_fine, $this->costo, $this->indirizzo_partenza,$this->indirizzo_arrivo,
+            $this->ora_inizio, $this->data_fine, $this->ora_fine, $this->costo, $this->indirizzo_partenza,$this->indirizzo_arrivo,
             $this->latitudine_partenza,$this->longitude_partenza,$this->latitudine_partenza,$this->latitudine_arrivo);
 
         // execute query and save success or error
         $result=$stmt->execute();
+
 
 
         //ritorno se la query è andata a buon fine

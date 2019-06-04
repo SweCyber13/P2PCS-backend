@@ -5,7 +5,8 @@
  * Date: 28/05/2019
  * Time: 14:56
  */
-include_once '../utils/Timestring.php';
+include_once '../utils/Timestring.php'; //include for class
+include_once '../utils/distance.php'; //include for distance calculations
 
 class Car
 {
@@ -15,6 +16,7 @@ class Car
     // database connection and table name
     private $conn;
     private $table_name = "MACCHINE_UTENTI";
+    private $table_user= "UTENTI_REGISTRATI";
     private $table_avaiability= "CALENDARIO_DISPONIBILITA";
     private $table_reviews="RECENSIONI";
     private $table_travels="PRENOTAZIONI"; //per recensioni
@@ -457,6 +459,7 @@ class Car
         //controlla se l'auto è disponibile nel giorno specificato nell'intervallo specificato
         $res=$this->getavaiability($day);
         $num = $res->num_rows;
+        echo $num;
         if($num==1) {
             $row = mysqli_fetch_assoc($res);
             $currentstring=new Timestring($row["Stringa_disponibilita"]);
@@ -514,14 +517,86 @@ class Car
         else return false;
     }
 
-    function getcloser($latitude, $longitude, $limit=100) {
-        //ritorna le $limit macchine più vicine alla posizione desiderata
-        //TODO
-    }
+    function search($startlat, $startlon, $endlat, $endlon, $day, $start_time, $end_time){
+        //ritorna la tabella con le auto risultanti dalla ricerca ovvero quelle che soddisfano i requisiti indicati
+        //1. LE PRIME 100 AUTO CHE SONO PIU VICINE A STARTLAT E STARTLONG
+        //2. CHE POSSONO DALLA LORO POSIZIONE ANDARE A DESTINATIONLAT E DESTINATIONLONG
+        //3. CHE SONO DISPONIBILI TRA START-TIME E END-TIME
+        //4. LA POSIZIONE DELLA MACCHINA DEVE ESSERE ENTRO 20 KILOMETRI DALLA POSIZIONE INIZIALE DATA DALL'UTENTE
 
-    function search(){
-        //ritorna la tabella con le auto risultanti dalla ricerca, con tutti i dettagli per il viaggio
-        //TODO
+        //prendo tutte le auto con rispettivi utenti e disponibilità
+
+        $avaiable_cars_arr=array(); //vuoto finche non trovo auto che soddisfano le condizioni
+
+        $query = "SELECT * FROM $this->table_name JOIN $this->table_user ON Proprietario=Username JOIN $this->table_avaiability ON Targa=Macchina WHERE Giorno=?";
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+
+        //bind params
+
+        $stmt->bind_param("s", $day);
+
+        // execute query
+        $stmt->execute();
+
+        echo $day;
+
+        //get select results
+        $result=$stmt->get_result();
+
+        if ($result->num_rows>0) {
+
+            echo "ci sono macchine";
+
+            $searchstring = new Timestring();
+            $searchstring->make($start_time, $end_time);
+            $cars_arr=array();
+            //trovo le auto disponibili in quella fascia temporale
+
+            while ($row = mysqli_fetch_assoc($result)){
+                // extract row
+                extract($row);
+
+                $currentstring=new Timestring($row["Stringa_disponibilita"]); //se è null viene considerato come 000...
+                //controllo se le ore richieste con updatestring siano disponibili
+                $disponibile=$currentstring->xor_string($searchstring);
+
+                if($disponibile)
+                    array_push($cars_arr, $row);
+            }
+
+            if(!empty($cars_arr)) {
+                echo "ci sono macchine disponibili";
+                $calculator= new distance();
+                //trovo le auto che dalla loro posizione posso arrivare a quella desiderata dall'utente
+                for($i=0;$i<count($cars_arr);$i++) {
+                    $percorrenza=$calculator->distance($cars_arr[$i]["Latitudine"],$cars_arr[$i]["Longitudine"],$endlat,$endlon); //distanza macchina-destinazione
+                    $distanza_utente=$calculator->distance($startlat,$startlon,$cars_arr[$i]["Latitudine"],$cars_arr[$i]["Longitudine"]); //distanza utente-macchina
+                    if($percorrenza<=$cars_arr[$i]["Raggio_percorrenza"]&&$distanza_utente<=20){
+                        $avaiable_cars_arr[$i]=$cars_arr[$i];
+                        //calcolo il prezzo totale del viaggio sara il proprietario a rifiutare distanze-costi-orari impossibili
+                        $ore=($end_time-$start_time)/60;
+                        $costo=$avaiable_cars_arr[$i]["Tariffa_oraria"]*$ore;
+                        $avaiable_cars_arr[$i]["Costo_viaggio"]=$costo;
+                        //aggiungo la distanza dell'utente dall'auto
+                        $avaiable_cars_arr[$i]["Distanza_utente"]=$distanza_utente;
+
+                    }
+
+                }
+
+                return $avaiable_cars_arr; //ritorno le auto disponibili
+            }
+
+            else return $avaiable_cars_arr; //non ci sono auto in quegli orari
+
+        }
+
+        else return $avaiable_cars_arr; //non ci sono auto
+
+
+
     }
 
 
