@@ -225,12 +225,16 @@ class quest
 
         if($this->premio_rank != 0){
             //come creare un oggetto user cui fare riferimento per invocare la funzione addpoints su di esso
-            $user->addpoints(0,$this->premio_rank);
+            $user_obj = new User(this->conn);
+            $user_obj->username = $user;
+            $user_obj->addpoints(0,$this->premio_rank);
         }
 
         if($this->premio_buono != 0){
             //come creare un oggetto user cui fare riferimento per invocare la funzione addpoints su di esso
-            $user->addpoints(1,$this->premio_buono);
+            $user_obj = new User(this->conn);
+            $user_obj->username = $user;
+            $user_obj->addpoints(1,$this->premio_buono);
         }
 
         if($this->premio_medaglia != null){
