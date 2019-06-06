@@ -15,6 +15,7 @@ class quest
     private $table_name = "MISSIONI";
     private $table_progress = "AVANZAMENTO_MISSIONI";
     private $table_users = "UTENTI_REGISTRATI";
+    private $table_badges = "MEDAGLIE_OTTENUTE";
 
     public $titolo; //PK
     public $descrizione;
@@ -224,21 +225,29 @@ class quest
         }
 
         if($this->premio_rank != 0){
-            //come creare un oggetto user cui fare riferimento per invocare la funzione addpoints su di esso
             $user_obj = new User(this->conn);
             $user_obj->username = $user;
             $user_obj->addpoints(0,$this->premio_rank);
         }
 
         if($this->premio_buono != 0){
-            //come creare un oggetto user cui fare riferimento per invocare la funzione addpoints su di esso
             $user_obj = new User(this->conn);
             $user_obj->username = $user;
             $user_obj->addpoints(1,$this->premio_buono);
         }
 
         if($this->premio_medaglia != null){
+            $query = "INSERT INTO $this->table_badges(Utente,Medaglia)  VALUES(?, ?)";
 
+            // prepare query statement
+            $stmt = $this->conn->prepare($query);
+
+            //bind params
+
+            $stmt->bind_param("ss",$this->username,$this->premio_medaglia);
+
+            // execute query and save success or error
+            $result=$stmt->execute();
         }
 
         //return false if there was an error
